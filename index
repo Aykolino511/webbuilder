@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wie funktioniert eine Website?</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS (via CDN for simplicity in single file) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Config for Tailwind colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        html: '#E34F26',
+                        css: '#1572B6',
+                        js: '#F7DF1E',
+                        dark: '#1e293b',
+                        darker: '#0f172a'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Smooth transitions for everything */
+        * {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569; 
+            border-radius: 4px;
+        }
+
+        /* The "Raw HTML" look - simulated by removing styles via class logic */
+        .raw-html-mode {
+            all: revert;
+            font-family: serif;
+            color: black;
+            background: white;
+            padding: 10px;
+            border: 1px solid gray;
+            display: block !important;
+            width: 100%;
+        }
+        
+        .raw-html-mode img {
+            width: 100px;
+            display: block;
+        }
+
+        .raw-html-mode button {
+            border: 1px solid black;
+            background: #ddd;
+            padding: 2px 5px;
+            cursor: default; /* No pointer in pure HTML usually */
+        }
+
+        /* Animation Keyframes */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .animate-pop {
+            animation: pop 0.3s ease-in-out;
+        }
+        
+        .code-glow {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-darker text-slate-200 font-sans min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="w-full bg-dark/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-code text-2xl text-indigo-400"></i>
+                <h1 class="font-bold text-xl tracking-tight">Web<span class="text-indigo-400">Builder</span></h1>
+            </div>
+            <a href="#demo" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+                Zum Live-Labor
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative overflow-hidden pt-20 pb-32 px-4 text-center">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+            <div class="absolute top-10 left-10 text-6xl text-html rotate-12"><i class="fa-brands fa-html5"></i></div>
+            <div class="absolute top-40 right-20 text-6xl text-css -rotate-12"><i class="fa-brands fa-css3-alt"></i></div>
+            <div class="absolute bottom-20 left-1/4 text-6xl text-js rotate-45"><i class="fa-brands fa-js"></i></div>
+        </div>
+
+        <h1 class="text-4xl md:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500">
+            Das Trio des Webs verstehen
+        </h1>
+        <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-10">
+            Jede moderne Website besteht aus drei Grundbausteinen. <br>
+            Entdecke interaktiv, wie <strong>HTML</strong>, <strong>CSS</strong> und <strong>JavaScript</strong> zusammenarbeiten.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <!-- HTML Card -->
+            <div class="bg-dark border border-slate-700 p-6 rounded-xl hover:border-html transition-colors group">
+                <div class="w-12 h-12 bg-html/20 text-html rounded-full flex items-center justify-center mb-4 text-2xl mx-auto group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-html5"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">HTML</h3>
+                <p class="text-slate-400 text-sm">Die Struktur. Das Skelett der Seite. Es definiert, <em>was</em> auf der Seite ist (Texte, Bilder, Buttons).</p>
+            </div>
+
+            <!-- CSS Card -->
+            <div class="bg-dark border border-slate-700 p-6 rounded-xl hover:border-css transition-colors group">
+                <div class="w-12 h-12 bg-css/20 text-css rounded-full flex items-center justify-center mb-4 text-2xl mx-auto group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-css3-alt"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">CSS</h3>
+                <p class="text-slate-400 text-sm">Das Design. Die Kleidung der Seite. Es definiert, <em>wie</em> es aussieht (Farben, Layout, Schriftarten).</p>
+            </div>
+
+            <!-- JS Card -->
+            <div class="bg-dark border border-slate-700 p-6 rounded-xl hover:border-js transition-colors group">
+                <div class="w-12 h-12 bg-js/20 text-js rounded-full flex items-center justify-center mb-4 text-2xl mx-auto group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-js"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-2">JavaScript</h3>
+                <p class="text-slate-400 text-sm">Die Funktion. Das Gehirn. Es definiert, <em>was passiert</em>, wenn man interagiert (Klicks, Animationen).</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Interactive Lab Section -->
+    <main id="demo" class="flex-grow bg-dark py-16 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Das Live-Labor</h2>
+                <p class="text-slate-400">Schalte CSS und JavaScript ein und aus, um den Unterschied zu sehen.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Controls Panel -->
+                <div class="lg:col-span-4 space-y-4">
+                    <div class="bg-darker border border-slate-700 p-6 rounded-xl shadow-lg">
+                        <h3 class="text-lg font-semibold mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders"></i> Steuerung
+                        </h3>
+
+                        <!-- HTML Static Control -->
+                        <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg mb-4 opacity-70 cursor-not-allowed border-l-4 border-html">
+                            <div>
+                                <span class="font-bold block text-html">1. HTML (Struktur)</span>
+                                <span class="text-xs text-slate-400">Immer aktiv (Fundament)</span>
+                            </div>
+                            <div class="w-10 h-6 bg-green-500 rounded-full relative">
+                                <div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                            </div>
+                        </div>
+
+                        <!-- CSS Toggle -->
+                        <div class="flex items-center justify-between p-4 bg-slate-800 rounded-lg mb-4 border-l-4 border-css hover:bg-slate-800/80 transition cursor-pointer" onclick="toggleCSS()">
+                            <div>
+                                <span class="font-bold block text-css">2. CSS (Design)</span>
+                                <span class="text-xs text-slate-400" id="css-status">Deaktiviert</span>
+                            </div>
+                            <button id="btn-css" class="w-12 h-7 bg-slate-600 rounded-full relative transition-colors duration-300">
+                                <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all duration-300 shadow-sm"></div>
+                            </button>
+                        </div>
+
+                        <!-- JS Toggle -->
+                        <div class="flex items-center justify-between p-4 bg-slate-800 rounded-lg border-l-4 border-js hover:bg-slate-800/80 transition cursor-pointer" onclick="toggleJS()">
+                            <div>
+                                <span class="font-bold block text-js">3. JavaScript (Logik)</span>
+                                <span class="text-xs text-slate-400" id="js-status">Deaktiviert</span>
+                            </div>
+                            <button id="btn-js" class="w-12 h-7 bg-slate-600 rounded-full relative transition-colors duration-300">
+                                <div class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all duration-300 shadow-sm"></div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Code Preview (Simplified) -->
+                    <div class="bg-black/80 rounded-xl p-4 font-mono text-xs overflow-x-auto border border-slate-700 code-glow">
+                        <div class="flex gap-2 mb-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <div id="code-display" class="space-y-2">
+                            <!-- Code will be injected via JS based on state -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Preview Canvas -->
+                <div class="lg:col-span-8">
+                    <div class="bg-white rounded-xl h-[500px] relative overflow-hidden flex items-center justify-center bg-grid-pattern shadow-2xl border border-slate-600">
+                        <div class="absolute top-4 left-4 bg-slate-200 text-slate-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+                            Browser Vorschau
+                        </div>
+
+                        <!-- THE COMPONENT -->
+                        <div id="demo-component" class="raw-html-mode transition-all duration-500">
+                            <!-- Image -->
+                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Avatar" id="demo-img" class="">
+                            
+                            <!-- Content -->
+                            <div id="demo-content">
+                                <h2 id="demo-title">Hallo, Welt!</h2>
+                                <p id="demo-text">Ich bin ein HTML Element.</p>
+                                
+                                <!-- Interaction stats (Hidden in raw HTML usually, but we keep it simple) -->
+                                <p id="demo-counter" style="display:none">Likes: 0</p>
+
+                                <button id="demo-btn">Klick mich</button>
+                            </div>
+                        </div>
+
+                        <!-- Feedback Message -->
+                        <div id="js-feedback" class="absolute bottom-10 bg-black/80 text-white px-4 py-2 rounded-lg opacity-0 transform translate-y-4 transition-all">
+                            Javascript Event ausgelöst!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-darker border-t border-slate-800 py-8 text-center text-slate-500 text-sm">
+        <p>Erstellt mit ❤️ für Code-Lernende.</p>
+    </footer>
+
+    <!-- LOGIC -->
+    <script>
+        // State
+        let isCSSActive = false;
+        let isJSActive = false;
+        let likes = 0;
+
+        // Elements
+        const component = document.getElementById('demo-component');
+        const btnCSS = document.getElementById('btn-css');
+        const btnJS = document.getElementById('btn-js');
+        const cssStatus = document.getElementById('css-status');
+        const jsStatus = document.getElementById('js-status');
+        const codeDisplay = document.getElementById('code-display');
+        
+        // Component Internal Elements
+        const demoBtn = document.getElementById('demo-btn');
+        const demoImg = document.getElementById('demo-img');
+        const demoCounter = document.getElementById('demo-counter');
+        const feedback = document.getElementById('js-feedback');
+
+        // Initial render of code
+        updateCodeDisplay();
+
+        // -----------------------
+        // FUNCTIONS
+        // -----------------------
+
+        function toggleCSS() {
+            isCSSActive = !isCSSActive;
+            
+            if (isCSSActive) {
+                // Activate UI Switch
+                btnCSS.classList.replace('bg-slate-600', 'bg-css');
+                btnCSS.firstElementChild.classList.add('translate-x-5');
+                cssStatus.textContent = "Aktiviert";
+                cssStatus.classList.add('text-css');
+
+                // Apply CSS to Component
+                applyComponentStyles();
+            } else {
+                // Deactivate UI Switch
+                btnCSS.classList.replace('bg-css', 'bg-slate-600');
+                btnCSS.firstElementChild.classList.remove('translate-x-5');
+                cssStatus.textContent = "Deaktiviert";
+                cssStatus.classList.remove('text-css');
+
+                // Remove CSS
+                removeComponentStyles();
+            }
+            updateCodeDisplay();
+        }
+
+        function toggleJS() {
+            isJSActive = !isJSActive;
+
+            if (isJSActive) {
+                // Activate UI Switch
+                btnJS.classList.replace('bg-slate-600', 'bg-js');
+                btnJS.firstElementChild.classList.add('translate-x-5');
+                jsStatus.textContent = "Aktiviert";
+                jsStatus.classList.add('text-js');
+                
+                // Visual cue that button is interactive
+                if(isCSSActive) {
+                    demoBtn.style.cursor = 'pointer';
+                    demoBtn.title = "Klick mich!";
+                }
+            } else {
+                // Deactivate
+                btnJS.classList.replace('bg-js', 'bg-slate-600');
+                btnJS.firstElementChild.classList.remove('translate-x-5');
+                jsStatus.textContent = "Deaktiviert";
+                jsStatus.classList.remove('text-js');
+                
+                demoBtn.style.cursor = 'default';
+                demoBtn.title = "";
+            }
+            updateCodeDisplay();
+        }
+
+        function applyComponentStyles() {
+            // Remove Raw HTML class
+            component.classList.remove('raw-html-mode');
+            
+            // Add Tailwind-like Classes (using standard JS to inject classes for the "Styled" look)
+            // Container
+            component.className = "bg-white p-6 rounded-2xl shadow-xl max-w-xs w-full text-center transform transition-all duration-500 hover:shadow-2xl border border-gray-100";
+            
+            // Image
+            demoImg.className = "w-24 h-24 rounded-full mx-auto mb-4 border-4 border-indigo-100 object-cover";
+            
+            // Text
+            document.getElementById('demo-title').className = "text-xl font-bold text-gray-800";
+            document.getElementById('demo-text').className = "text-gray-500 mb-6";
+            
+            // Button
+            demoBtn.className = "bg-indigo-600 text-white px-6 py-2 rounded-full font-semibold shadow-md hover:bg-indigo-700 transition-colors duration-300 w-full";
+            
+            // Counter
+            demoCounter.className = "text-xs text-indigo-500 font-bold mb-2 uppercase tracking-wide";
+            
+            if (!isJSActive) {
+                demoBtn.style.cursor = 'not-allowed'; // Hint that JS is missing
+            } else {
+                demoBtn.style.cursor = 'pointer';
+            }
+        }
+
+        function removeComponentStyles() {
+            // Revert to raw HTML class
+            component.className = "raw-html-mode";
+            
+            // Strip classes from children
+            demoImg.className = "";
+            document.getElementById('demo-title').className = "";
+            document.getElementById('demo-text').className = "";
+            demoBtn.className = "";
+            demoCounter.className = "";
+            
+            demoBtn.style = ""; // Clear inline styles
+        }
+
+        // -----------------------
+        // INTERACTION LOGIC (The JS Part)
+        // -----------------------
+        
+        demoBtn.addEventListener('click', () => {
+            if (!isJSActive) {
+                // Without JS, buttons usually submit forms or do nothing visible on page
+                // We simulate "nothing happens" or a browser default jump
+                return; 
+            }
+
+            // WITH JS ACTIVE:
+            
+            // 1. Logic: Update Counter
+            likes++;
+            demoCounter.textContent = `Likes: ${likes}`;
+            demoCounter.style.display = 'block';
+
+            // 2. Animation (Logic affecting Style)
+            demoBtn.classList.add('animate-pop');
+            setTimeout(() => demoBtn.classList.remove('animate-pop'), 300);
+
+            // 3. Feedback
+            showFeedback();
+            
+            // 4. Change Image border color randomly
+            if(isCSSActive) {
+                const colors = ['border-indigo-100', 'border-pink-200', 'border-green-200', 'border-yellow-200'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                demoImg.className = demoImg.className.replace(/border-\w+-\d+/, randomColor);
+            }
+        });
+
+        function showFeedback() {
+            feedback.style.opacity = '1';
+            feedback.style.transform = 'translateY(0)';
+            feedback.innerText = `JS Logik: Like #${likes} hinzugefügt!`;
+            
+            setTimeout(() => {
+                feedback.style.opacity = '0';
+                feedback.style.transform = 'translateY(16px)';
+            }, 2000);
+        }
+
+        // -----------------------
+        // CODE VISUALIZER
+        // -----------------------
+        function updateCodeDisplay() {
+            let htmlCode = `<span class="text-html">&lt;div&gt;</span>
+  <span class="text-html">&lt;h2&gt;</span>Hallo<span class="text-html">&lt;/h2&gt;</span>
+  <span class="text-html">&lt;button&gt;</span>Klick<span class="text-html">&lt;/button&gt;</span>
+<span class="text-html">&lt;/div&gt;</span>`;
+
+            let cssCode = isCSSActive ? `
+<span class="text-slate-500">// CSS aktiviert</span>
+<span class="text-css">.card</span> {
+  <span class="text-blue-300">background</span>: white;
+  <span class="text-blue-300">border-radius</span>: 16px;
+  <span class="text-blue-300">box-shadow</span>: 0 4px...;
+}` : `<span class="text-slate-600 italic">// CSS fehlt...</span>`;
+
+            let jsCode = isJSActive ? `
+<span class="text-slate-500">// JS aktiviert</span>
+<span class="text-js">button</span>.addEventListener(<span class="text-green-400">'click'</span>, () => {
+  likes++;
+  <span class="text-js">updateUI</span>();
+});` : `<span class="text-slate-600 italic">// JavaScript fehlt...</span>`;
+
+            codeDisplay.innerHTML = `
+<div class="mb-2 pb-2 border-b border-slate-800">${htmlCode}</div>
+<div class="mb-2 pb-2 border-b border-slate-800 transition-opacity duration-500 ${isCSSActive ? 'opacity-100' : 'opacity-50'}">${cssCode}</div>
+<div class="transition-opacity duration-500 ${isJSActive ? 'opacity-100' : 'opacity-50'}">${jsCode}</div>
+            `;
+        }
+
+    </script>
+</body>
+</html>
